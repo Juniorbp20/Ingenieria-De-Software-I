@@ -4,6 +4,8 @@
  */
 package paint202510;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.awt.BorderLayout;
 import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
@@ -24,6 +26,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         lienzo = new PanelDeDibujo();
         add(lienzo, BorderLayout.CENTER);
+        System.out.println("hola");
     }
 
     /**
@@ -130,4 +133,5 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     // End of variables declaration//GEN-END:variables
+
 }
