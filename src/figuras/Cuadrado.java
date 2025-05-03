@@ -27,10 +27,18 @@ public class Cuadrado extends Figura {
         int x = Math.min(puntoInicial.x, puntoFinal.x);
         int y = Math.min(puntoInicial.y, puntoFinal.y);
         int lado = Math.max(Math.abs(puntoFinal.x - puntoInicial.x), Math.abs(puntoFinal.y - puntoInicial.y));
-        boolean relleno = false;
 
         if (relleno) {
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
             g.fillRect(x, y, lado, lado);
+
+            // Dibuja el borde si los colores son diferentes
+            if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
+                g.setColor(colorDePrimerPlano);
+                g.drawRect(x, y, lado, lado);
+            }
         } else {
             g.drawRect(x, y, lado, lado);
         }

@@ -11,7 +11,7 @@ import java.awt.Point;
 public abstract class Figura {
     protected Color colorDePrimerPlano = Color.BLACK;
     protected boolean relleno = false;
-    private Color colorDeRelleno;
+    public Color colorDeRelleno;
 
     public abstract void dibujar(Graphics g);
     public abstract void actualizar(Point puntoActual);

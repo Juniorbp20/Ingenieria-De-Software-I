@@ -6,7 +6,9 @@ import java.awt.Point;
 public class Triangulo extends Figura {
     private Point puntoInicial;
     private Point puntoFinal;
-    boolean relleno = false;
+
+    // Eliminar esta variable local que oculta la heredada
+    // boolean relleno = false;
 
     public Triangulo(Point puntoInicial) {
         this.puntoInicial = puntoInicial;
@@ -33,10 +35,18 @@ public class Triangulo extends Figura {
             xPoints = new int[]{puntoInicial.x, puntoFinal.x, puntoInicial.x};
             yPoints = new int[]{puntoInicial.y, puntoFinal.y, puntoInicial.y};
         }
-        
 
         if (relleno) {
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
             g.fillPolygon(xPoints, yPoints, 3);
+
+            // Dibuja el borde si los colores son diferentes
+            if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
+                g.setColor(colorDePrimerPlano);
+                g.drawPolygon(xPoints, yPoints, 3);
+            }
         } else {
             g.drawPolygon(xPoints, yPoints, 3);
         }

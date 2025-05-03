@@ -21,29 +21,40 @@ public class Estrella extends Figura {
     }
 
     @Override
-    public void dibujar(Graphics grafico) {
-        grafico.setColor(colorDePrimerPlano);
+    public void dibujar(Graphics g) {
+        g.setColor(colorDePrimerPlano);
 
-        int radioExterior = (int) centroGeometrico.distance(verticeReferencia);
-        int radioInterior = radioExterior / 2;
-
-        int[] puntosX = new int[numeroPuntas * 2];
-        int[] puntosY = new int[numeroPuntas * 2];
-
-        for (int i = 0; i < numeroPuntas * 2; i++) {
-            double angulo = Math.toRadians(-90 + i * 360.0 / (numeroPuntas * 2));
-            int radio = (i % 2 == 0) ? radioExterior : radioInterior;
-            puntosX[i] = centroGeometrico.x + (int) (radio * Math.cos(angulo));
-            puntosY[i] = centroGeometrico.y + (int) (radio * Math.sin(angulo));
-        }
-
-        Polygon formaEstrella = new Polygon(puntosX, puntosY, numeroPuntas * 2);
-        boolean relleno = false;
+        // Cálculo de coordenadas...
 
         if (relleno) {
-            grafico.fillPolygon(formaEstrella);
-        } else {
-            grafico.drawPolygon(formaEstrella);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
+
+            if (colorDeRelleno != colorDePrimerPlano) {
+                g.setColor(colorDePrimerPlano);
+                int radioExterior = (int) centroGeometrico.distance(verticeReferencia);
+                int radioInterior = radioExterior / 2;
+
+                int[] puntosX = new int[numeroPuntas * 2];
+                int[] puntosY = new int[numeroPuntas * 2];
+
+                for (int i = 0; i < numeroPuntas * 2; i++) {
+                    double angulo = Math.toRadians(-90 + i * 360.0 / (numeroPuntas * 2));
+                    int radio = (i % 2 == 0) ? radioExterior : radioInterior;
+                    puntosX[i] = centroGeometrico.x + (int) (radio * Math.cos(angulo));
+                    puntosY[i] = centroGeometrico.y + (int) (radio * Math.sin(angulo));
+                }
+
+                Polygon formaEstrella = new Polygon(puntosX, puntosY, numeroPuntas * 2);
+                boolean relleno = false;
+
+                if (relleno) {
+                    g.fillPolygon(formaEstrella);
+                } else {
+                    g.drawPolygon(formaEstrella);
+                }
+            }
         }
     }
 }

@@ -24,40 +24,43 @@ public class Rombo extends Figura {
         this.puntoActual = centro;
     }
 
+
     @Override
     public void actualizar(Point puntoActual) {
         this.puntoActual = puntoActual;
     }
-
-    @Override
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano);
 
-        int dx = puntoActual.x - centro.x;
-        int dy = puntoActual.y - centro.y;
-
-        int[] xPoints = {
-            centro.x,
-            centro.x + dx,
-            centro.x,
-            centro.x - dx
-        };
-
-        int[] yPoints = {
-            centro.y - dy,
-            centro.y,
-            centro.y + dy,
-            centro.y
-        };
-
-        Polygon rombo = new Polygon(xPoints, yPoints, 4);
-        boolean relleno = false;
-        
         if (relleno) {
-            g.fillPolygon(rombo);
-        } else {
-            g.drawPolygon(rombo);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
+            int dx = puntoActual.x - centro.x;
+            int dy = puntoActual.y - centro.y;
+
+            int[] xPoints = {
+                    centro.x,
+                    centro.x + dx,
+                    centro.x,
+                    centro.x - dx
+            };
+
+            int[] yPoints = {
+                    centro.y - dy,
+                    centro.y,
+                    centro.y + dy,
+                    centro.y
+            };
+
+            Polygon rombo = new Polygon(xPoints, yPoints, 4);
+            boolean relleno = false;
+
+            if (relleno) {
+                g.fillPolygon(rombo);
+            } else {
+                g.drawPolygon(rombo);
+            }
         }
     }
 }
-

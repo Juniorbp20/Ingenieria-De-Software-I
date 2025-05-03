@@ -24,27 +24,36 @@ public class Heptagono extends Figura {
         this.verticeReferencia = nuevoPunto;
     }
     
+
+
     @Override
-    public void dibujar(Graphics grafico) {
-        grafico.setColor(colorDePrimerPlano);
+    public void dibujar(Graphics g) {
+        g.setColor(colorDePrimerPlano);
 
-        int radio = (int) centroGeometrico.distance(verticeReferencia);
-        int[] puntosX = new int[numeroLados];
-        int[] puntosY = new int[numeroLados];
-
-        for (int i = 0; i < numeroLados; i++) {
-            double angulo = Math.toRadians(-90 + i * (360.0 / numeroLados));
-            puntosX[i] = centroGeometrico.x + (int) (radio * Math.cos(angulo));
-            puntosY[i] = centroGeometrico.y + (int) (radio * Math.sin(angulo));
-        }
-
-        Polygon heptagonoForma = new Polygon(puntosX, puntosY, numeroLados);
-        boolean relleno = false;
+        // Cálculo de coordenadas...
 
         if (relleno) {
-            grafico.fillPolygon(heptagonoForma);
-        } else {
-            grafico.drawPolygon(heptagonoForma);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
+            int radio = (int) centroGeometrico.distance(verticeReferencia);
+            int[] puntosX = new int[numeroLados];
+            int[] puntosY = new int[numeroLados];
+
+            for (int i = 0; i < numeroLados; i++) {
+                double angulo = Math.toRadians(-90 + i * (360.0 / numeroLados));
+                puntosX[i] = centroGeometrico.x + (int) (radio * Math.cos(angulo));
+                puntosY[i] = centroGeometrico.y + (int) (radio * Math.sin(angulo));
+            }
+
+            Polygon heptagonoForma = new Polygon(puntosX, puntosY, numeroLados);
+            boolean relleno = false;
+
+            if (relleno) {
+                g.fillPolygon(heptagonoForma);
+            } else {
+                g.drawPolygon(heptagonoForma);
+            }
         }
     }
 }

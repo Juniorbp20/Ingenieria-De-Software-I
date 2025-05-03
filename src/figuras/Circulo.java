@@ -1,14 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package figuras;
 
-/**
- *
- * @author robin
- */
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -35,10 +26,18 @@ public class Circulo extends Figura {
         int x = centro.x - radio;
         int y = centro.y - radio;
         int diametro = radio * 2;
-        boolean relleno = false;
 
         if (relleno) {
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
             g.fillOval(x, y, diametro, diametro);
+
+            // Dibuja el borde si los colores son diferentes
+            if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
+                g.setColor(colorDePrimerPlano);
+                g.drawOval(x, y, diametro, diametro);
+            }
         } else {
             g.drawOval(x, y, diametro, diametro);
         }

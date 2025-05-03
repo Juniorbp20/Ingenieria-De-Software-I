@@ -33,23 +33,28 @@ public class Pentagono extends Figura {
     public void dibujar(Graphics g) {
         g.setColor(colorDePrimerPlano);
 
-        int radio = (int) centro.distance(puntoActual);
-        int[] xPoints = new int[5];
-        int[] yPoints = new int[5];
-
-        for (int i = 0; i < 5; i++) {
-            double angle = Math.toRadians(-90 + i * 72); // Empieza hacia arriba
-            xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
-            yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
-        }
-
-        Polygon pentagono = new Polygon(xPoints, yPoints, 5);
-        boolean relleno = false;
-        
         if (relleno) {
-            g.fillPolygon(pentagono);
-        } else {
-            g.drawPolygon(pentagono);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
+            int radio = (int) centro.distance(puntoActual);
+            int[] xPoints = new int[5];
+            int[] yPoints = new int[5];
+
+            for (int i = 0; i < 5; i++) {
+                double angle = Math.toRadians(-90 + i * 72); // Empieza hacia arriba
+                xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
+                yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
+            }
+
+            Polygon pentagono = new Polygon(xPoints, yPoints, 5);
+            boolean relleno = false;
+
+            if (relleno) {
+                g.fillPolygon(pentagono);
+            } else {
+                g.drawPolygon(pentagono);
+            }
         }
     }
 }
