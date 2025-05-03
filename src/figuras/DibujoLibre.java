@@ -7,35 +7,36 @@ package figuras;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
 
 /**
  *
  * @author josearielpereyra
  */
-public class Linea extends Figura{
-    private Point puntoInicial;
-    private Point puntoFinal;
+public class DibujoLibre extends Figura{
     private Color color;
 
+    ArrayList<Point> puntos = new ArrayList<>();
 
-    public Linea(Point puntoInicial, Point puntoFinal) {
-        this.puntoInicial = puntoInicial;
-        this.puntoFinal = puntoFinal;
+    public DibujoLibre(Point puntoInicial) {
         this.color = Color.BLACK;
-    }
-
-    public Linea(Point puntoInicial) {
-        this(puntoInicial, puntoInicial);
+        actualizar(puntoInicial);
     }
     
+    
+
     @Override
     public void dibujar(Graphics g) {
         g.setColor(color);
-        g.drawLine(puntoInicial.x, puntoInicial.y, puntoFinal.x, puntoFinal.y);
+        for(int i = 1; i < puntos.size(); i++) {
+            g.drawLine(puntos.get(i-1).x, puntos.get(i-1).y, puntos.get(i).x, puntos.get(i).y);
+        }
     }
 
     @Override
     public void actualizar(Point puntoActual) {
-        puntoFinal = puntoActual;
+        puntos.add(puntoActual);
     }
+    
+    
 }
