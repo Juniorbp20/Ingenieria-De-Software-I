@@ -17,7 +17,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     public VentanaPrincipal() {
         initComponents();
 
-        setSize(1000, 600);
+        setSize(1000, 800);
         setLocationRelativeTo(null);
 
         barraDeHerramientas = new BarraDeHerramientas();

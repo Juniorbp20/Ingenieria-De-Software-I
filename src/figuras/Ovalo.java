@@ -1,14 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package figuras;
 
-/**
- *
- * @author robin
- */
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -34,10 +25,18 @@ public class Ovalo extends Figura {
         int y = Math.min(puntoInicial.y, puntoFinal.y);
         int width = Math.abs(puntoFinal.x - puntoInicial.x);
         int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        boolean relleno = false;
-        
+
         if (relleno) {
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno);
+            }
             g.fillOval(x, y, width, height);
+
+            // Dibuja el borde si los colores son diferentes
+            if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
+                g.setColor(colorDePrimerPlano);
+                g.drawOval(x, y, width, height);
+            }
         } else {
             g.drawOval(x, y, width, height);
         }

@@ -28,36 +28,61 @@ public class Rombo extends Figura {
     public void actualizar(Point puntoActual) {
         this.puntoActual = puntoActual;
     }
-
+    
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano);
+        g.setColor(colorDePrimerPlano); // Establecer el color del borde
 
-        int dx = puntoActual.x - centro.x;
-        int dy = puntoActual.y - centro.y;
-
-        int[] xPoints = {
-            centro.x,
-            centro.x + dx,
-            centro.x,
-            centro.x - dx
-        };
-
-        int[] yPoints = {
-            centro.y - dy,
-            centro.y,
-            centro.y + dy,
-            centro.y
-        };
-
-        Polygon rombo = new Polygon(xPoints, yPoints, 4);
-        boolean relleno = false;
-        
         if (relleno) {
-            g.fillPolygon(rombo);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno); // Establecer el color de relleno
+            }
+            int dx = puntoActual.x - centro.x;
+            int dy = puntoActual.y - centro.y;
+
+            int[] xPoints = {
+                    centro.x,
+                    centro.x + dx,
+                    centro.x,
+                    centro.x - dx
+            };
+
+            int[] yPoints = {
+                    centro.y - dy,
+                    centro.y,
+                    centro.y + dy,
+                    centro.y
+            };
+
+            Polygon rombo = new Polygon(xPoints, yPoints, 4);
+            g.fillPolygon(rombo); // Dibujar el relleno
+
+            // Dibujar el borde si es diferente del color de relleno
+            if (colorDeRelleno != colorDePrimerPlano) {
+                g.setColor(colorDePrimerPlano);
+                g.drawPolygon(rombo); // Dibujar el borde
+            }
         } else {
-            g.drawPolygon(rombo);
+            // Si no hay relleno, solo dibujar el borde
+            int dx = puntoActual.x - centro.x;
+            int dy = puntoActual.y - centro.y;
+
+            int[] xPoints = {
+                    centro.x,
+                    centro.x + dx,
+                    centro.x,
+                    centro.x - dx
+            };
+
+            int[] yPoints = {
+                    centro.y - dy,
+                    centro.y,
+                    centro.y + dy,
+                    centro.y
+            };
+
+            Polygon rombo = new Polygon(xPoints, yPoints, 4);
+            g.drawPolygon(rombo); // Solo dibujar el borde
         }
     }
 }
-

@@ -31,25 +31,44 @@ public class Pentagono extends Figura {
 
     @Override
     public void dibujar(Graphics g) {
-        g.setColor(colorDePrimerPlano);
+        g.setColor(colorDePrimerPlano); // Establecer el color del borde
 
-        int radio = (int) centro.distance(puntoActual);
-        int[] xPoints = new int[5];
-        int[] yPoints = new int[5];
-
-        for (int i = 0; i < 5; i++) {
-            double angle = Math.toRadians(-90 + i * 72); // Empieza hacia arriba
-            xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
-            yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
-        }
-
-        Polygon pentagono = new Polygon(xPoints, yPoints, 5);
-        boolean relleno = false;
-        
         if (relleno) {
-            g.fillPolygon(pentagono);
+            if (colorDeRelleno != null) {
+                g.setColor(colorDeRelleno); // Establecer el color de relleno
+            }
+            int radio = (int) centro.distance(puntoActual);
+            int[] xPoints = new int[5];
+            int[] yPoints = new int[5];
+
+            for (int i = 0; i < 5; i++) {
+                double angle = Math.toRadians(-90 + i * 72); // Empieza hacia arriba
+                xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
+                yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
+            }
+
+            Polygon pentagono = new Polygon(xPoints, yPoints, 5);
+            g.fillPolygon(pentagono); // Dibujar el relleno
+
+            // Dibujar el borde si es diferente del color de relleno
+            if (colorDeRelleno != colorDePrimerPlano) {
+                g.setColor(colorDePrimerPlano);
+                g.drawPolygon(pentagono); // Dibujar el borde
+            }
         } else {
-            g.drawPolygon(pentagono);
+            // Si no hay relleno, solo dibujar el borde
+            int radio = (int) centro.distance(puntoActual);
+            int[] xPoints = new int[5];
+            int[] yPoints = new int[5];
+
+            for (int i = 0; i < 5; i++) {
+                double angle = Math.toRadians(-90 + i * 72);
+                xPoints[i] = centro.x + (int) (radio * Math.cos(angle));
+                yPoints[i] = centro.y + (int) (radio * Math.sin(angle));
+            }
+
+            Polygon pentagono = new Polygon(xPoints, yPoints, 5);
+            g.drawPolygon(pentagono); // Solo dibujar el borde
         }
     }
 }
