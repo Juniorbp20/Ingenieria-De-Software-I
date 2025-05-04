@@ -1,13 +1,11 @@
 package figuras;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Polygon;
+import java.awt.*;
 
 public class Flecha extends Figura {
     private Point inicio;
     private Point fin;
+    Color colorDeRelleno = null;
 
     public Flecha(Point inicio) {
         this.inicio = inicio;
