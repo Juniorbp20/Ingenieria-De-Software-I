@@ -2,74 +2,200 @@ package paint202510;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JPanel;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
+/**
+ * Clase PanelDeColores - Proporciona controles para seleccionar colores y opciones de relleno,
+ * así como botones para mostrar información del proyecto y cargar una imagen.
+ */
 public class PanelDeColores extends JPanel {
+    /**
+     * Botón para abrir el selector de color del borde.
+     */
     private final JButton botonColorBorde;
+    /**
+     * El color de borde seleccionado actualmente.
+     */
     private Color colorBordeActual = Color.BLACK;
-    private JButton botonColorRelleno; // Este botón no está inicializado
+    /**
+     * Botón para abrir el selector de color de relleno.
+     */
+    private JButton botonColorRelleno;
+    /**
+     * Botón para mostrar información del proyecto.
+     */
+    private JButton botonInformacion;
+    /**
+     * El color de relleno seleccionado actualmente.
+     */
     private Color colorRellenoActual = Color.WHITE;
+    /**
+     * Casilla de verificación para habilitar/deshabilitar el relleno de formas.
+     */
     private final JCheckBox checkRellenar;
+    /**
+     * Botón para cargar una imagen en el panel de dibujo.
+     */
+    protected JToggleButton botonCargar;
+    /**
+     * Referencia al panel de dibujo.
+     */
+    private PanelDeDibujo panelDeDibujo = null;
+
+    /**
+     * Constructor del panel de colores y sus componentes.
+     */
     public PanelDeColores() {
-        setLayout(new FlowLayout(FlowLayout.LEFT)); // Opcional: alinear componentes a la izquierda
-        
-        // Inicializar los botones de color
-        botonColorBorde = new JButton("Color Borde");
-        botonColorRelleno = new JButton("Color Relleno"); // AÑADIDO: Inicializar el botón de relleno
-        
-        // Inicializar el checkbox de rellenar
-        checkRellenar = new JCheckBox("Rellenar");
-        checkRellenar.setSelected(false);
-        
-        // Añadir Listener al botón de color de Borde
+        setLayout(new FlowLayout(FlowLayout.LEFT)); // Usar FlowLayout para la disposición de componentes.
+        botonColorBorde = new JButton("Color Borde"); // Inicializar botón de color de borde.
+        botonColorRelleno = new JButton("Color Relleno"); // Inicializar botón de color de relleno.
+        botonInformacion = new JButton("Informacion"); // Inicializar botón de información.
+        botonCargar = new JToggleButton("Cargar Imagen"); // Inicializar botón de cargar imagen.
+
+        checkRellenar = new JCheckBox("Rellenar"); // Inicializar casilla de verificación de relleno.
+        checkRellenar.setSelected(false); // Establecer el estado inicial de la casilla de relleno.
+
+        // Añadir listener de acciones para el botón de color de borde.
         botonColorBorde.addActionListener((ActionEvent e) -> {
             Color nuevoColor = JColorChooser.showDialog(
                     PanelDeColores.this,
                     "Seleccionar Color del Borde",
                     colorBordeActual
             );
-            
+
             if (nuevoColor != null) {
-                colorBordeActual = nuevoColor;
-                // Opcional: Cambiar el color de fondo del botón para mostrar el color seleccionado
-                // botonColorBorde.setBackground(colorBordeActual);
+                colorBordeActual = nuevoColor; // Actualizar el color de borde actual si se selecciona un nuevo color.
             }
         });
-        
-        // Añadir Listener al botón de color de Relleno
+
+        // Añadir listener de acciones para el botón de color de relleno.
         botonColorRelleno.addActionListener((ActionEvent e) -> {
             Color nuevoColor = JColorChooser.showDialog(
                     PanelDeColores.this,
                     "Seleccionar Color de Relleno",
                     colorRellenoActual
             );
-            
+
             if (nuevoColor != null) {
-                colorRellenoActual = nuevoColor;
-                // Opcional: Cambiar el color de fondo del botón para mostrar el color seleccionado
-                // botonColorRelleno.setBackground(colorRellenoActual);
+                colorRellenoActual = nuevoColor; // Actualizar el color de relleno actual si se selecciona un nuevo color.
             }
         });
-        
-        // Añadir los controles al panel
+
+        // Añadir listener de acciones para el botón de información.
+        botonInformacion.addActionListener((ActionEvent e) -> {
+            mostrarInformacionProyecto(); // Llamar al método para mostrar información del proyecto.
+        });
+
+        // Añadir componentes al panel.
         add(botonColorBorde);
         add(botonColorRelleno);
         add(checkRellenar);
+        add(botonInformacion);
+        add(botonCargar);
+
+        // Añadir listener de acciones para el botón de cargar imagen.
+        botonCargar.addActionListener((ActionEvent e) -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Cargar Imagen");
+            int userSelection = fileChooser.showOpenDialog(PanelDeColores.this);
+
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToLoad = fileChooser.getSelectedFile();
+                try {
+                    BufferedImage loadedImage = ImageIO.read(fileToLoad);
+                    if (loadedImage != null) {
+                        if (panelDeDibujo != null) {
+                            panelDeDibujo.setImagenDeFondo(loadedImage); // Establecer la imagen cargada como fondo en el panel de dibujo.
+                            JOptionPane.showMessageDialog(PanelDeColores.this,
+                                    "Imagen cargada correctamente.",
+                                    "Carga Exitosa",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        } else {
+                            JOptionPane.showMessageDialog(PanelDeColores.this,
+                                    "Error interno: No se pudo obtener la referencia al Panel de Dibujo.",
+                                    "Error de Carga",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(PanelDeColores.this,
+                                "No se pudo leer la imagen. Asegúrate de que es un formato válido.",
+                                "Error al Cargar",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(PanelDeColores.this,
+                            "Error al leer el archivo de imagen:\n" + ex.getMessage(),
+                            "Error de E/S al Cargar",
+                            JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(PanelDeColores.this,
+                            "Ocurrió un error inesperado al cargar la imagen:\n" + ex.getMessage(),
+                            "Error General al Cargar",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
-    
-    // Métodos públicos para obtener el color del borde seleccionado
+
+    /**
+     * Establece la referencia al panel de dibujo.
+     * @param panelDeDibujo La instancia de PanelDeDibujo.
+     */
+    public void setPanelDeDibujo(PanelDeDibujo panelDeDibujo) {
+        this.panelDeDibujo = panelDeDibujo;
+    }
+
+    /**
+     * Muestra información sobre el proyecto en un cuadro de diálogo de mensaje.
+     */
+    private void mostrarInformacionProyecto() {
+        String mensaje = "Descripción del Proyecto:\n" +
+                "Este proyecto es una aplicación de dibujo llamada \"Paint 2025-10\", que permite\n" +
+                "a los usuarios crear y editar gráficos utilizando diversas herramientas.\n" +
+                "Los usuarios pueden seleccionar diferentes formas, colores y opciones de relleno para\n" +
+                "personalizar sus creaciones. La interfaz es intuitiva, con una barra de herramientas que facilita\n" +
+                "el acceso a las funciones de dibujo, y un panel de colores para elegir los tonos deseados.\n" +
+                "La aplicación también permite guardar las imágenes creadas en formato PNG.\n\n" +
+                "Integrantes del Proyecto:\n" +
+                "- José Ariel Pereyra Francisco (Profesor)\n" +
+                "- Gustavo Junior Bonifacio Peña (Gerente del proyecto)\n" +
+                "- Carolina De Jesús Reinoso\n" +
+                "- Robinzon Michel Gabino Fernández\n" +
+                "- Marcos Miguel Gómez Camilo\n" +
+                "- Jon Luis Jones Esteban\n" +
+                "- Frailyn José Martinez Santos\n" +
+                "- Ebenezer Peña Hernandez\n" +
+                "- Bryan José Ureña Castillo";
+
+        JOptionPane.showMessageDialog(this, mensaje, "Acerca del Proyecto", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Obtiene el color de borde seleccionado actualmente.
+     * @return El color de borde actual.
+     */
     public Color getColorBordeActual() {
         return colorBordeActual;
     }
-    
-    // Métodos públicos para obtener el color de relleno seleccionado
+
+    /**
+     * Obtiene el color de relleno seleccionado actualmente.
+     * @return El color de relleno actual.
+     */
     public Color getColorRellenoActual() {
         return colorRellenoActual;
     }
-    
-    // Métodos públicos para saber si el relleno está activado
+
+    /**
+     * Verifica si la opción de relleno está seleccionada actualmente.
+     * @return true si el relleno está habilitado, false en caso contrario.
+     */
     public boolean isRellenar() {
         return checkRellenar.isSelected();
     }
