@@ -1,29 +1,28 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package paint202510;
 
-import java.awt.*;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JColorChooser; // Aunque no se usa directamente en esta clase, está en los imports originales.
-import javax.swing.JScrollPane;
-import javax.swing.JFileChooser; // Aunque no se usa directamente para cargar/guardar en esta clase, está en los imports originales.
-import javax.swing.JOptionPane;
-
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage; // Aunque no se usa directamente para cargar/guardar en esta clase, está en los imports originales.
-import java.io.File; // Aunque no se usa directamente para cargar/guardar en esta clase, está en los imports originales.
-import java.io.IOException; // Aunque no se usa directamente para cargar/guardar en esta clase, está en los imports originales.
-import javax.imageio.ImageIO; // Aunque no se usa directamente para cargar/guardar en esta clase, está en los imports originales.
-
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 /**
- * La ventana principal de la aplicación Paint.
- * Esta clase configura el JFrame y añade el panel de dibujo,
- * la barra de herramientas y el panel de colores. También maneja
- * los listeners de acciones para los botones de acción (Guardar, Deshacer, Rehacer, Limpiar) en la barra de herramientas.
+ *
+ * @author Gustavo j. Bonifacio
  */
-public class VentanaPrincipal extends JFrame {
+public class Ventana extends javax.swing.JFrame {
 
     /**
      * El panel de dibujo principal donde se dibujan las figuras.
@@ -47,7 +46,7 @@ public class VentanaPrincipal extends JFrame {
      * Inicializa y organiza los componentes principales: barra de herramientas, panel de colores y panel de dibujo.
      * Configura los listeners de acciones para los botones de la barra de herramientas.
      */
-    public VentanaPrincipal() {
+    public Ventana() {
         initComponents(); // Inicializa componentes generados por el diseñador de formularios (si hay alguno).
 
         // Configurar el título de la ventana
@@ -73,7 +72,7 @@ public class VentanaPrincipal extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Funcionalidad de guardar (ya presente y documentada)
                 if (lienzo.getWidth() <= 0 || lienzo.getHeight() <= 0) {
-                    JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                    JOptionPane.showMessageDialog(Ventana.this,
                             "El área de dibujo no tiene tamaño para guardar.",
                             "Error al Guardar",
                             JOptionPane.ERROR_MESSAGE);
@@ -88,7 +87,7 @@ public class VentanaPrincipal extends JFrame {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setDialogTitle("Guardar imagen del lienzo");
 
-                int userSelection = fileChooser.showSaveDialog(VentanaPrincipal.this);
+                int userSelection = fileChooser.showSaveDialog(Ventana.this);
 
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     File fileToSave = fileChooser.getSelectedFile();
@@ -115,12 +114,12 @@ public class VentanaPrincipal extends JFrame {
 
                         if (success) {
                             System.out.println("Imagen guardada correctamente en: " + fileToSave.getAbsolutePath());
-                            JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                            JOptionPane.showMessageDialog(Ventana.this,
                                     "Imagen guardada correctamente como ." + fileExtension.toUpperCase(),
                                     "Guardado Exitoso",
                                     JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                            JOptionPane.showMessageDialog(Ventana.this,
                                     "Formato de archivo no soportado para guardar: ." + fileExtension + "\nIntente .png o .jpg",
                                     "Error de Formato al Guardar",
                                     JOptionPane.ERROR_MESSAGE);
@@ -128,13 +127,13 @@ public class VentanaPrincipal extends JFrame {
 
                     } catch (IOException ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                        JOptionPane.showMessageDialog(Ventana.this,
                                 "Error al guardar la imagen:\n" + ex.getMessage(),
                                 "Error de E/S al Guardar",
                                 JOptionPane.ERROR_MESSAGE);
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        JOptionPane.showMessageDialog(VentanaPrincipal.this,
+                        JOptionPane.showMessageDialog(Ventana.this,
                                 "Ocurrió un error inesperado:\n" + ex.getMessage(),
                                 "Error General al Guardar",
                                 JOptionPane.ERROR_MESSAGE);
@@ -202,20 +201,110 @@ public class VentanaPrincipal extends JFrame {
     }
 
     /**
-     * Inicializa los componentes del frame.
-     * Este método es típicamente generado por un constructor de GUI.
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        jMenuBar2 = new javax.swing.JMenuBar();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuBar3 = new javax.swing.JMenuBar();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+
+        jMenu3.setText("File");
+        jMenuBar2.add(jMenu3);
+
+        jMenu4.setText("Edit");
+        jMenuBar2.add(jMenu4);
+
+        jMenu5.setText("File");
+        jMenuBar3.add(jMenu5);
+
+        jMenu6.setText("Edit");
+        jMenuBar3.add(jMenu6);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    }
+
+        jMenu1.setText("Archivo");
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuItem1.setText("Salir");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuItem2.setText("Copiar");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_V, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        jMenuItem3.setText("Pegar");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 277, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // Comando para copiar
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // Comando para pegar
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
-     * El punto de entrada principal de la aplicación.
-     * Crea y muestra la ventana principal.
-     * @param args los argumentos de la línea de comandos
+     * @param args the command line arguments
      */
     public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -223,16 +312,37 @@ public class VentanaPrincipal extends JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException |
-                 IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Ventana.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
 
-        EventQueue.invokeLater(new Runnable() {
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                VentanaPrincipal vp = new VentanaPrincipal();
-                vp.setVisible(true);
+                new Ventana().setVisible(true);
             }
         });
     }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuBar jMenuBar3;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    // End of variables declaration//GEN-END:variables
 }

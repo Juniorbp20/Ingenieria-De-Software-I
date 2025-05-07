@@ -65,6 +65,16 @@ public class BarraDeHerramientas extends JToolBar{
         btnTrapecio = new JToggleButton("Trapecio"); // Inicializar botón Trapecio
         btnGuardar = new JButton("Guardar");
 
+        // Add Undo, Redo, and Clear buttons
+        btnDeshacer = new JButton("Deshacer");
+        btnRehacer = new JButton("Rehacer");
+        btnLimpiar = new JButton("Limpiar");
+        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción"); // Asumiendo que tienes iconos como deshacer.png
+        formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha"); // Asumiendo que tienes iconos como rehacer.png
+        formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo"); // Asumiendo que tienes iconos como limpiar.png
+
+        // Añadir un separador visual
+        add(new Separator());
 
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre");
         formatearYAgregar(btnLinea, "linea.png", "Línea");
@@ -82,18 +92,6 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnCorazon, "corazon.png", "Corazón");
         formatearYAgregar(btnTrapecio, "trapecio.png", "Trapecio"); // Formatear y añadir botón Trapecio
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
-
-        // Añadir un separador visual
-        add(new Separator());
-
-        // Add Undo, Redo, and Clear buttons
-        btnDeshacer = new JButton("Deshacer");
-        btnRehacer = new JButton("Rehacer");
-        btnLimpiar = new JButton("Limpiar");
-        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción"); // Asumiendo que tienes iconos como deshacer.png
-        formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha"); // Asumiendo que tienes iconos como rehacer.png
-        formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo"); // Asumiendo que tienes iconos como limpiar.png
-
 
         // Añadir otro separador visual antes del botón Guardar
         add(new Separator());
