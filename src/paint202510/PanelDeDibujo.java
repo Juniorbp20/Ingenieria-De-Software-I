@@ -158,35 +158,6 @@ public class PanelDeDibujo extends JPanel {
     }
 
     /**
-     * Guarda el contenido actual del panel como una imagen PNG.
-     * Este método es triggered por el ActionListener del botón Guardar en VentanaPrincipal.
-     */
-    private void guardarImagen() {
-        BufferedImage imagen = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics g = imagen.getGraphics();
-        paint(g);
-        g.dispose();
-
-        JFileChooser selector = new JFileChooser();
-        selector.setDialogTitle("Guardar Imagen");
-
-        int seleccion = selector.showSaveDialog(this);
-        if (seleccion == JFileChooser.APPROVE_OPTION) {
-            File archivo = selector.getSelectedFile();
-            try {
-                String rutaArchivo = archivo.getAbsolutePath();
-                if (!rutaArchivo.toLowerCase().endsWith(".png")) {
-                    rutaArchivo += ".png";
-                }
-                ImageIO.write(imagen, "png", new File(rutaArchivo));
-                JOptionPane.showMessageDialog(this, "Imagen guardada exitosamente.");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error al guardar: " + ex.getMessage());
-            }
-        }
-    }
-
-    /**
      * Pinta el componente. Este método es llamado por el framework Swing
      * cuando el componente necesita ser dibujado.
      * @param g El objeto Graphics a usar para pintar.

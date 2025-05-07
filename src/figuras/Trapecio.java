@@ -1,12 +1,9 @@
 package figuras;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point; // Importar Point
 import java.awt.Polygon; // Importar Polygon
-import java.awt.geom.Path2D; // Aunque Path2D se usó en el ejemplo original, usaremos Polygon para un trapecio simple.
-
 
 /**
  * Representa una forma de trapecio que puede ser dibujada y rellenada.
@@ -14,7 +11,7 @@ import java.awt.geom.Path2D; // Aunque Path2D se usó en el ejemplo original, us
  * @author Bryan
  */
 public class Trapecio extends Figura { // Extender de Figura
-    private Point puntoInicial; // Punto de inicio (esquina superior izquierda del bounding box inicial)
+    private final Point puntoInicial; // Punto de inicio (esquina superior izquierda del bounding box inicial)
     private Point puntoActual; // Punto actual (determina tamaño y forma del trapecio)
 
     /**
@@ -56,9 +53,8 @@ public class Trapecio extends Figura { // Extender de Figura
         // Calcular los puntos del trapecio.
         // Este es un ejemplo simple de un trapecio isósceles.
         // Puedes ajustar esta lógica para crear diferentes tipos de trapecios.
-        int baseInferiorAncho = width;
         int baseSuperiorAncho = (int) (width * 0.6); // La base superior es el 60% de la inferior
-        int diferenciaAncho = (baseInferiorAncho - baseSuperiorAncho) / 2;
+        int diferenciaAncho = (width - baseSuperiorAncho) / 2;
 
         int[] xPoints = {
                 x + diferenciaAncho,           // Esquina superior izquierda
@@ -86,15 +82,14 @@ public class Trapecio extends Figura { // Extender de Figura
             if (colorDeRelleno != colorDePrimerPlano && colorDeRelleno != null) {
                 g2.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano (propiedad heredada)
                 g2.drawPolygon(trapecioForma); // Dibujar el contorno del trapecio
-            } else if (colorDeRelleno == null) {
-                // Si no hay color de relleno especificado pero relleno es true,
-                // puedes decidir si quieres dibujar el borde o no.
-                // Siguiendo la lógica de tus otras figuras, si colorDeRelleno es null
-                // y relleno es true, solo se rellena (con el color actual, que ya se estableció).
-                // Si quieres el borde, descomenta la siguiente línea:
-                // g2.setColor(colorDePrimerPlano);
-                // g2.drawPolygon(trapecioForma);
-            }
+            }  // Si no hay color de relleno especificado pero relleno es true,
+            // puedes decidir si quieres dibujar el borde o no.
+            // Siguiendo la lógica de tus otras figuras, si colorDeRelleno es null
+            // y relleno es true, solo se rellena (con el color actual, que ya se estableció).
+            // Si quieres el borde, descomenta la siguiente línea:
+            // g2.setColor(colorDePrimerPlano);
+            // g2.drawPolygon(trapecioForma);
+
 
         } else { // Si no hay relleno, solo dibujar el contorno
             g2.setColor(colorDePrimerPlano); // Usar colorDePrimerPlano (propiedad heredada)

@@ -164,6 +164,8 @@ public class BarraDeHerramientas extends JToolBar{
             return "Corazón";
         } else if (btnTrapecio.isSelected()) { // Añadir caso para el botón Trapecio
             return "Trapecio";
+        } else if (btnBorrador.isSelected()) {
+            return "Borrador";
         }
         else {
             return "Dibujo Libre";
