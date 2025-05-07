@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack; // Importar Stack para la funcionalidad de rehacer.
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.imageio.ImageIO; // Aunque se usa en saveImagen, está relacionado con el contenido de este panel.
+import java.awt.image.BufferedImage; // Aunque se usa en setImagenDeFondo y saveImagen.
+import java.io.File; // Aunque se usa en saveImagen.
+import javax.swing.JFileChooser; // Aunque se usa en saveImagen.
+import javax.swing.JOptionPane; // Aunque se usa en saveImagen y setImagenDeFondo.
 
 /**
  * Clase PanelDeDibujo - Representa el lienzo de dibujo donde se dibujan las figuras.
  * Maneja los eventos del ratón para crear y modificar figuras y gestiona la lista de figuras.
- * Incluye funcionalidad para Deshacer, Rehacer y Limpiar.
+ * Incluye funcionalidad para Undo, Redo, y Clear. Ahora soporta las figuras Corazon y Trapecio.
  */
 public class PanelDeDibujo extends JPanel {
     private Figura figuraActual; // La figura que se está dibujando o modificando actualmente.
@@ -60,17 +60,20 @@ public class PanelDeDibujo extends JPanel {
                     return;
                 }
 
+                // Obtener el tipo de figura según la herramienta seleccionada y crear una nueva instancia.
                 figuraActual = obtenerFiguraADibujar(e.getPoint());
 
+                // Si la figura actual no es nula (es decir, no es una acción como guardar), configurar sus propiedades
+                if (figuraActual != null) {
+                    // Usamos los colores y estado de relleno DEL PANEL DE COLORES
+                    figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual()); // Establecer color de borde de la figura
+                    figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual()); // Establecer color de relleno de la figura
+                    figuraActual.setRelleno(panelDeColores.isRellenar()); // Establecer estado de relleno de la figura
 
-                // Usamos los colores y estado de relleno DEL PANEL DE COLORES
-                figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual()); // Establecer color de borde de la figura
-                figuraActual.setColorDeRelleno(panelDeColores.getColorRellenoActual()); // Establecer color de relleno de la figura
-                figuraActual.setRelleno(panelDeColores.isRellenar()); // Establecer estado de relleno de la figura
-
-                figuras.add(figuraActual); // Añadir la nueva figura a la lista.
-                figurasDeshechas.clear(); // Limpiar la pila de rehacer cuando se dibuja una nueva figura.
-                repaint(); // Repintar el panel para mostrar la nueva figura.
+                    figuras.add(figuraActual); // Añadir la nueva figura a la lista.
+                    figurasDeshechas.clear(); // Limpiar la pila de rehacer cuando se dibuja una nueva figura.
+                    repaint(); // Repintar el panel para mostrar la nueva figura.
+                }
             }
 
             /**
@@ -144,6 +147,10 @@ public class PanelDeDibujo extends JPanel {
                 return new Estrella(punto);
             case "Flecha":
                 return new Flecha(punto);
+            case "Corazón":
+                return new Corazon(punto);
+            case "Trapecio": // Añadir caso para la figura Trapecio
+                return new Trapecio(punto); // Crear una nueva instancia de Trapecio
             case "Dibujo Libre":
             default:
                 return new DibujoLibre(punto); // Por defecto, dibujo libre (Lapiz)
@@ -152,7 +159,7 @@ public class PanelDeDibujo extends JPanel {
 
     /**
      * Guarda el contenido actual del panel como una imagen PNG.
-     * Este método se activa mediante el listener de acciones del botón Guardar en VentanaPrincipal.
+     * Este método es triggered por el ActionListener del botón Guardar en VentanaPrincipal.
      */
     private void guardarImagen() {
         BufferedImage imagen = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -228,6 +235,8 @@ public class PanelDeDibujo extends JPanel {
             figuras.add(figuraRehecha); // Añadir la figura de vuelta a la lista principal.
             repaint(); // Repintar el panel.
         }
+        // Nota: Si se añade una nueva figura después de rehacer, la pila figurasDeshechas se limpia
+        // en mousePressed o mouseDragged (para el borrador).
     }
 
     /**

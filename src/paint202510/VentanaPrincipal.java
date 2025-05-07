@@ -51,7 +51,7 @@ public class VentanaPrincipal extends JFrame {
         initComponents(); // Inicializa componentes generados por el diseñador de formularios (si hay alguno).
 
         // Configurar el título de la ventana
-        setTitle("Mi Paint 202510 - Cargar y Guardar Implementados");
+        setTitle("Mi Paint 202510");
 
         // Crear instancias de los paneles principales en el orden correcto
         barraDeHerramientas = new BarraDeHerramientas();

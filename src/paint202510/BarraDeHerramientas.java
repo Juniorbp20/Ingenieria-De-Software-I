@@ -18,7 +18,7 @@ import javax.swing.AbstractButton;
 
 /**
  * Clase BarraDeHerramientas - Crea y gestiona la barra de herramientas con botones de figuras y acciones.
- * Ahora incluye botones para Deshacer, Rehacer y Limpiar.
+ * Ahora incluye botones para Deshacer, Rehacer, Limpiar, Corazón y Trapecio.
  */
 public class BarraDeHerramientas extends JToolBar{
 
@@ -30,17 +30,19 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnCirculo;
     protected JToggleButton btnCuadrado;
     protected JToggleButton btnTriangulo;
+    protected JButton btnGuardar;
     protected JToggleButton btnPentagono;
     protected JToggleButton btnRombo;
     protected JToggleButton btnHeptagono;
     protected JToggleButton btnOctagono;
     protected JToggleButton btnEstrella;
     protected JToggleButton btnFlecha;
+    protected JToggleButton btnCorazon; // Botón para la figura Corazón
+    protected JToggleButton btnTrapecio; // Botón para la figura Trapecio
 
-    protected JButton btnGuardar;
-    protected JButton btnDeshacer; // Botón para Deshacer
-    protected JButton btnRehacer; // Botón para Rehacer
-    protected JButton btnLimpiar; // Botón para Limpiar Lienzo
+    protected JButton btnDeshacer; // Button for Undo
+    protected JButton btnRehacer; // Button for Redo
+    protected JButton btnLimpiar; // Button for Clear Canvas
 
     public BarraDeHerramientas() {
         setOrientation(JToolBar.VERTICAL);
@@ -59,19 +61,10 @@ public class BarraDeHerramientas extends JToolBar{
         btnOctagono = new JToggleButton("Octagono");
         btnEstrella = new JToggleButton("Estrella");
         btnFlecha = new JToggleButton("Flecha");
+        btnCorazon = new JToggleButton("Corazon");
+        btnTrapecio = new JToggleButton("Trapecio"); // Inicializar botón Trapecio
         btnGuardar = new JButton("Guardar");
 
-        // Inicializar botones Deshacer, Rehacer y Limpiar
-        btnDeshacer = new JButton("Deshacer");
-        btnRehacer = new JButton("Rehacer");
-        btnLimpiar = new JButton("Limpiar");
-
-        // Añadir botones Deshacer, Rehacer y Limpiar
-        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción"); // Asumiendo que tienes iconos como deshacer.png
-        formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha"); // Asumiendo que tienes iconos como rehacer.png
-        formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo"); // Asumiendo que tienes iconos como limpiar.png
-        // Añadir un separador visual
-        add(new Separator());
 
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre");
         formatearYAgregar(btnLinea, "linea.png", "Línea");
@@ -86,7 +79,21 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnOctagono, "octagono.png", "Octagono");
         formatearYAgregar(btnEstrella, "estrella.png", "Estrella");
         formatearYAgregar(btnFlecha, "flecha.png", "Flecha");
+        formatearYAgregar(btnCorazon, "corazon.png", "Corazón");
+        formatearYAgregar(btnTrapecio, "trapecio.png", "Trapecio"); // Formatear y añadir botón Trapecio
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador");
+
+        // Añadir un separador visual
+        add(new Separator());
+
+        // Add Undo, Redo, and Clear buttons
+        btnDeshacer = new JButton("Deshacer");
+        btnRehacer = new JButton("Rehacer");
+        btnLimpiar = new JButton("Limpiar");
+        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción"); // Asumiendo que tienes iconos como deshacer.png
+        formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha"); // Asumiendo que tienes iconos como rehacer.png
+        formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo"); // Asumiendo que tienes iconos como limpiar.png
+
 
         // Añadir otro separador visual antes del botón Guardar
         add(new Separator());
@@ -137,8 +144,6 @@ public class BarraDeHerramientas extends JToolBar{
             return "Óvalo";
         } else if (btnCirculo.isSelected()) {
             return "Círculo";
-        } else if (btnBorrador.isSelected()) {
-            return "Borrador";
         } else if (btnCuadrado.isSelected()) {
             return "Cuadrado";
         } else if (btnTriangulo.isSelected()) {
@@ -155,6 +160,10 @@ public class BarraDeHerramientas extends JToolBar{
             return "Estrella";
         } else if (btnFlecha.isSelected()) {
             return "Flecha";
+        } else if (btnCorazon.isSelected()) {
+            return "Corazón";
+        } else if (btnTrapecio.isSelected()) { // Añadir caso para el botón Trapecio
+            return "Trapecio";
         }
         else {
             return "Dibujo Libre";
@@ -166,24 +175,24 @@ public class BarraDeHerramientas extends JToolBar{
     }
 
     /**
-     * Obtiene el botón de Deshacer.
-     * @return El JButton de Deshacer.
+     * Gets the Undo button.
+     * @return The Undo JButton.
      */
     public JButton getBtnDeshacer() {
         return btnDeshacer;
     }
 
     /**
-     * Obtiene el botón de Rehacer.
-     * @return El JButton de Rehacer.
+     * Gets the Redo button.
+     * @return The Redo JButton.
      */
     public JButton getBtnRehacer() {
         return btnRehacer;
     }
 
     /**
-     * Obtiene el botón de Limpiar.
-     * @return El JButton de Limpiar.
+     * Gets the Clear button.
+     * @return The Clear JButton.
      */
     public JButton getBtnLimpiar() {
         return btnLimpiar;
