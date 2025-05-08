@@ -74,4 +74,27 @@ public class Heptagono extends Figura {
             g.drawPolygon(heptagonoForma);
         }
     }
+
+    @Override
+    public FiguraData getFiguraData() {
+        FiguraData data = new FiguraData("Rectangulo");
+        data.setPuntoInicial(this.puntoInicial);
+        data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
+        data.setColorDePrimerPlano(this.colorDePrimerPlano);
+        data.setColorDeRelleno(this.colorDeRelleno);
+        data.setEstaRelleno(this.relleno);
+        // No tiene sentido para Rectangulo setear centro, puntosTrazo o tamanoBorrador
+        return data;
+    }
+
+    // Implementación de contains para Rectángulo (más precisa)
+    @Override
+    public boolean contains(Point p) {
+        int x = Math.min(puntoInicial.x, puntoFinal.x);
+        int y = Math.min(puntoInicial.y, puntoFinal.y);
+        int width = Math.abs(puntoFinal.x - puntoInicial.x);
+        int height = Math.abs(puntoFinal.y - puntoInicial.y);
+        // Crear un rectángulo Java y verificar si contiene el punto
+        return new java.awt.Rectangle(x, y, width, height).contains(p);
+    }
 }

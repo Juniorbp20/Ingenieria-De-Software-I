@@ -1,6 +1,5 @@
 package paint202510;
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,6 +10,7 @@ import javax.swing.*;
 /**
  * Clase PanelDeColores - Proporciona controles para seleccionar colores y opciones de relleno,
  * así como botones para mostrar información del proyecto y cargar una imagen.
+ * Ahora incluye un botón de selección y métodos para coordinar con BarraDeHerramientas y PanelDeDibujo.
  */
 public class PanelDeColores extends JPanel {
     /**
@@ -41,10 +41,18 @@ public class PanelDeColores extends JPanel {
      * Botón para cargar una imagen en el panel de dibujo.
      */
     protected JToggleButton botonCargar;
+
+    protected JToggleButton botonSeleccionar; // Ya es JToggleButton y nombre corregido
+
     /**
      * Referencia al panel de dibujo.
      */
     private PanelDeDibujo panelDeDibujo = null;
+
+    /**
+     * Referencia a la barra de herramientas para coordinar la selección de herramientas.
+     */
+    private BarraDeHerramientas barraDeHerramientas = null; // Referencia a BarraDeHerramientas
 
     /**
      * Constructor del panel de colores y sus componentes.
@@ -55,6 +63,10 @@ public class PanelDeColores extends JPanel {
         botonColorRelleno = new JButton("Color Relleno"); // Inicializar botón de color de relleno.
         botonInformacion = new JButton("Informacion"); // Inicializar botón de información.
         botonCargar = new JToggleButton("Cargar Imagen"); // Inicializar botón de cargar imagen.
+
+        // Inicializar el botón de selección como JToggleButton
+        botonSeleccionar = new JToggleButton("Seleccionar Figura"); // Inicializado como JToggleButton
+
 
         checkRellenar = new JCheckBox("Rellenar"); // Inicializar casilla de verificación de relleno.
         checkRellenar.setSelected(false); // Establecer el estado inicial de la casilla de relleno.
@@ -69,6 +81,11 @@ public class PanelDeColores extends JPanel {
 
             if (nuevoColor != null) {
                 colorBordeActual = nuevoColor; // Actualizar el color de borde actual si se selecciona un nuevo color.
+                // Opcional: Si hay una figura seleccionada, actualizar su color de borde
+                if (panelDeDibujo != null && panelDeDibujo.getFiguraSeleccionada() != null) {
+                    panelDeDibujo.getFiguraSeleccionada().setColorDePrimerPlano(colorBordeActual);
+                    panelDeDibujo.repaint(); // Repintar para mostrar el cambio de color
+                }
             }
         });
 
@@ -82,20 +99,28 @@ public class PanelDeColores extends JPanel {
 
             if (nuevoColor != null) {
                 colorRellenoActual = nuevoColor; // Actualizar el color de relleno actual si se selecciona un nuevo color.
+                // Opcional: Si hay una figura seleccionada y está marcada como rellena, actualizar su color de relleno
+                if (panelDeDibujo != null && panelDeDibujo.getFiguraSeleccionada() != null && panelDeDibujo.getFiguraSeleccionada().isRelleno()) {
+                    panelDeDibujo.getFiguraSeleccionada().setColorDeRelleno(colorRellenoActual);
+                    panelDeDibujo.repaint(); // Repintar para mostrar el cambio de color
+                }
             }
         });
+
+        // Añadir listener de acciones para la casilla de verificación de relleno.
+        checkRellenar.addActionListener((ActionEvent e) -> {
+            // Opcional: Si hay una figura seleccionada, actualizar su estado de relleno
+            if (panelDeDibujo != null && panelDeDibujo.getFiguraSeleccionada() != null) {
+                panelDeDibujo.getFiguraSeleccionada().setRelleno(checkRellenar.isSelected());
+                panelDeDibujo.repaint(); // Repintar para mostrar el cambio de relleno
+            }
+        });
+
 
         // Añadir listener de acciones para el botón de información.
         botonInformacion.addActionListener((ActionEvent e) -> {
             mostrarInformacionProyecto(); // Llamar al método para mostrar información del proyecto.
         });
-
-        // Añadir componentes al panel.
-        add(botonColorBorde);
-        add(botonColorRelleno);
-        add(checkRellenar);
-        add(botonInformacion);
-        add(botonCargar);
 
         // Añadir listener de acciones para el botón de cargar imagen.
         botonCargar.addActionListener((ActionEvent e) -> {
@@ -141,6 +166,74 @@ public class PanelDeColores extends JPanel {
                 }
             }
         });
+
+        // Añadir listener de acciones para el botón de seleccionar figura.
+        botonSeleccionar.addActionListener((ActionEvent e) -> {
+            if (botonSeleccionar.isSelected()) {
+                // Si el botón de selección se activa, deseleccionar los botones de figura en la barra de herramientas
+                if (barraDeHerramientas != null) {
+                    barraDeHerramientas.deseleccionarBotonesFiguras();
+                }
+                // Deseleccionar cualquier figura en el panel de dibujo al activar el modo selección
+                if (panelDeDibujo != null) {
+                    panelDeDibujo.deseleccionarFigura();
+                }
+            } else {
+                // Si el botón de selección se desactiva (lo cual no debería pasar si es el único seleccionado en un grupo,
+                // pero es posible si no está en un grupo o si otro botón de selección existiera),
+                // podrías hacer algo aquí si fuera necesario.
+                // Como ahora está en un grupo, este 'else' se activará cuando otro botón en SU grupo sea seleccionado,
+                // pero actualmente no está en un grupo, así que la lógica principal está en el 'if'.
+                // Si añadieras otros botones de selección, deberías agruparlos. Por ahora, asumimos que solo hay uno.
+                // Si el usuario deselecciona manualmente el botón de selección, también deberíamos deseleccionar la figura.
+                if (panelDeDibujo != null) {
+                    panelDeDibujo.deseleccionarFigura();
+                }
+            }
+            if (panelDeDibujo != null) {
+                panelDeDibujo.repaint(); // Repintar para actualizar el estado de selección visual
+            }
+        });
+
+
+        // Añadir componentes al panel.
+        add(botonColorBorde);
+        add(botonColorRelleno);
+        add(checkRellenar);
+        formatearYAgregar(botonInformacion, "informacion.png", "Infotmacion", false);
+        formatearYAgregar(botonCargar, "subirImagen.png", "Cargar Imagen", false);
+        formatearYAgregar(botonSeleccionar, "seleccion.png", "Selecionar Imagen", false);
+
+
+
+        // Nota: Necesitarás añadir los botones de Copiar y Pegar aquí también en un paso posterior.
+    }
+    // Método formatearYAgregar modificado para incluir si es un botón de figura
+    private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esBotonFigura) {
+        boton.setFocusable(false);
+        boton.setToolTipText("Seleccione: " + tooltip);
+
+        // Usar un ClientProperty para marcar si es un botón de figura
+        boton.putClientProperty("esBotonFigura", esBotonFigura);
+
+
+        java.net.URL ruta = getClass().getResource("/iconos/" + nombreIcono);
+        if (ruta != null) {
+            boton.setIcon(new ImageIcon(ruta));
+            boton.setText(null);
+        } else {
+            if (boton.getText() == null || boton.getText().isEmpty()) {
+                boton.setText(tooltip);
+            }
+
+            boton.setFont(new Font("Arial", Font.BOLD, 10));
+            boton.setHorizontalTextPosition(SwingConstants.CENTER);
+            boton.setVerticalTextPosition(SwingConstants.BOTTOM);
+
+            System.err.println("Icono no encontrado: /iconos/" + nombreIcono + " (Usando texto)");
+        }
+
+        add(boton);
     }
 
     /**
@@ -150,6 +243,24 @@ public class PanelDeColores extends JPanel {
     public void setPanelDeDibujo(PanelDeDibujo panelDeDibujo) {
         this.panelDeDibujo = panelDeDibujo;
     }
+
+    /**
+     * Obtiene la referencia al panel de dibujo.
+     * @return La instancia de PanelDeDibujo.
+     */
+    public PanelDeDibujo getPanelDeDibujo() {
+        return panelDeDibujo;
+    }
+
+
+    /**
+     * Establece la referencia a la barra de herramientas.
+     * @param barraDeHerramientas La instancia de BarraDeHerramientas.
+     */
+    public void setBarraDeHerramientas(BarraDeHerramientas barraDeHerramientas) {
+        this.barraDeHerramientas = barraDeHerramientas;
+    }
+
 
     /**
      * Muestra información sobre el proyecto en un cuadro de diálogo de mensaje.
@@ -198,5 +309,27 @@ public class PanelDeColores extends JPanel {
      */
     public boolean isRellenar() {
         return checkRellenar.isSelected();
+    }
+
+    /**
+     * Verifica si el botón de selección de figura está seleccionado.
+     * @return true si el botón de selección está seleccionado, false en caso contrario.
+     */
+    public boolean isSeleccionarMode() {
+        return botonSeleccionar.isSelected();
+    }
+
+    /**
+     * Establece el estado seleccionado del botón de selección de figura.
+     * @param selected El estado a establecer (true para seleccionado, false para deseleccionado).
+     */
+    public void setSeleccionarButtonState(boolean selected) {
+        botonSeleccionar.setSelected(selected);
+        if (!selected && panelDeDibujo != null) {
+            panelDeDibujo.deseleccionarFigura(); // Deseleccionar la figura si se desactiva el botón de selección
+        }
+        if (panelDeDibujo != null) {
+            panelDeDibujo.repaint(); // Repintar para actualizar visualmente
+        }
     }
 }

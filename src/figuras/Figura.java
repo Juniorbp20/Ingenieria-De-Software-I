@@ -4,9 +4,7 @@
  */
 package figuras;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * Clase base abstracta para todas las figuras dibujables.
@@ -16,6 +14,8 @@ public abstract class Figura {
     protected Color colorDePrimerPlano = Color.BLACK; // El color del contorno o trazo de la figura.
     protected boolean relleno = false; // Indica si la figura debe ser rellenada.
     public Color colorDeRelleno; // El color usado para rellenar la figura.
+    protected Point puntoFinal;
+    protected Point puntoInicial;
 
     /**
      * Método abstracto para dibujar la figura en el contexto gráfico dado.
@@ -82,5 +82,30 @@ public abstract class Figura {
      */
     public Color getColorDeRelleno() {
         return colorDeRelleno;
+    }
+
+
+    /**
+     * Método abstracto para obtener un objeto FiguraData que represente los datos de esta figura.
+     * Debe ser implementado por cada subclase de figura concreta.
+     * @return Un objeto FiguraData con los datos de la figura.
+     */
+    public abstract FiguraData getFiguraData();
+
+    /**
+     * Método para verificar si un punto dado está contenido dentro del área de la figura.
+     * Es útil para la selección de figuras.
+     * Las subclases deben sobrescribir este método para proporcionar una implementación precisa.
+     * @param p El punto a verificar.
+     * @return true si el punto está dentro de la figura, false en caso contrario.
+     */
+    public boolean contains(Point p) {
+        // Implementación por defecto: verificar si el punto está cerca de algún punto de control.
+        // Las subclases deben sobrescribir esto para una detección de colisión más precisa.
+        return false; // Por defecto, ninguna figura contiene el punto a menos que se sobrescriba
+    }
+
+    public Rectangle getBounds() {
+        return null;
     }
 }
