@@ -54,13 +54,12 @@ public class PanelDeDibujo extends JPanel {
              */
             @Override
             public void mousePressed(MouseEvent e) {
-                // Si la herramienta de selección está activa (tendremos que añadir esto después),
-                // o si no se está dibujando una nueva figura (implícito cuando no se selecciona una herramienta de dibujo)
-                // intentar seleccionar una figura.
-                // Por ahora, asumimos que si no se selecciona una herramienta de dibujo, se intenta seleccionar.
+                // Obtener la herramienta seleccionada de la barra de herramientas
                 String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
 
-                if ("Seleccionar".equals(herramienta)) { // Asumiendo que habrá una herramienta de selección
+                // --- Lógica de Selección ---
+                // NOTA: Cambiado "Seleccionar" a "Seleccionar Figura" para coincidir con el nombre real de la herramienta
+                if ("Seleccionar Figura".equals(herramienta)) {
                     Figura figuraClickeada = getFiguraEnPunto(e.getPoint());
 
                     if (figuraClickeada != null) {
@@ -76,19 +75,32 @@ public class PanelDeDibujo extends JPanel {
                     repaint(); // Repintar para mostrar la selección (o la falta de ella)
                     return; // Salir del método ya que la acción fue seleccionar
                 }
+                // --- Fin Lógica de Selección ---
 
 
-                // Si no estamos en modo selección o borrador, proceder con el dibujo normal.
-                if (!"Borrador".equals(herramienta)) {
-                    // Deseleccionar cualquier figura si empezamos a dibujar una nueva
+                // Si la herramienta es el Borrador, creamos y añadimos una instancia inmediatamente
+                if ("Borrador".equals(herramienta)) {
+                    // Deseleccionar cualquier figura si empezamos a borrar
                     figuraSeleccionada = null;
+                    // La instancia de Borrador se crea y añade en mouseDragged para un borrado continuo.
+                    // Simplemente nos aseguramos de que el modo de borrado está activo y salimos,
+                    // el mouseDragged se encargará de añadir las "marcas" del borrador.
+                    figurasDeshechas.clear(); // Limpiar rehacer al iniciar un trazo de borrador
+                    // No creamos figuraActual = new Borrador(e.getPoint()); aquí en mousePressed,
+                    // ya que mouseDragged lo hará repetidamente.
+                    return; // Salir, mouseDragged manejará el resto
                 }
 
+
+                // --- Lógica de Dibujo Normal para otras herramientas (Línea, Rectángulo, etc.) ---
+                // Si no estamos en modo selección o borrador, proceder con el dibujo normal.
+                // Deseleccionar cualquier figura si empezamos a dibujar una nueva
+                figuraSeleccionada = null;
+
                 // Obtener el tipo de figura según la herramienta seleccionada y crear una nueva instancia.
-                // Esta lógica se mantiene igual que antes para las herramientas de dibujo y borrador.
                 figuraActual = obtenerFiguraADibujar(e.getPoint());
 
-                // Si la figura actual no es nula (es decir, es una herramienta de dibujo o borrador)
+                // Si la figura actual no es nula (es decir, es una herramienta de dibujo)
                 if (figuraActual != null) {
                     // Usamos los colores y estado de relleno DEL PANEL DE COLORES
                     figuraActual.setColorDePrimerPlano(panelDeColores.getColorBordeActual()); // Establecer color de borde de la figura
@@ -100,6 +112,7 @@ public class PanelDeDibujo extends JPanel {
                     figurasDeshechas.clear(); // Limpiar la pila de rehacer cuando se dibuja una nueva figura.
                     repaint(); // Repintar el panel para mostrar la nueva figura.
                 }
+                // --- Fin Lógica de Dibujo Normal ---
             }
 
             /**
@@ -112,8 +125,10 @@ public class PanelDeDibujo extends JPanel {
                 // Si la herramienta es el borrador, cada "marca" se añadió en mouseDragged,
                 // así que no necesitamos hacer nada especial aquí para el borrador.
                 // Si estamos dibujando una figura normal, simplemente terminamos el trazo.
-                if (!"Borrador".equals(barraDeHerramientas.getHerramientaSeleccionada())) {
-                    figuraActual = null; // Restablecer la figura actual después de completar el dibujo.
+                // No hacemos nada si estamos en modo selección.
+                String herramienta = barraDeHerramientas.getHerramientaSeleccionada();
+                if (!"Borrador".equals(herramienta) && !"Seleccionar Figura".equals(herramienta)) {
+                    figuraActual = null; // Restablecer la figura actual después de completar el dibujo (solo para figuras de dibujo).
                 }
             }
 
@@ -140,8 +155,8 @@ public class PanelDeDibujo extends JPanel {
                     // o cuando se inicia una nueva figura no borrador.
                     // figurasDeshechas.clear(); // Limpiar la pila de rehacer al usar el borrador - se hace en mousePressed ahora.
 
-                } else if (figuraActual != null) {
-                    // Si estamos dibujando una figura normal, actualizarla.
+                } else if (figuraActual != null && !"Seleccionar Figura".equals(herramienta)) {
+                    // Si estamos dibujando una figura normal y NO estamos en modo selección, actualizarla.
                     figuraActual.actualizar(e.getPoint());
                 }
                 repaint(); // Repintar el panel para mostrar la figura actualizada.
@@ -161,6 +176,9 @@ public class PanelDeDibujo extends JPanel {
 
         for (Figura figura : figurasInvertidas) {
             // Usar el método contains de cada figura para verificar si el punto está dentro de su área
+            // Nota: Asegúrate de que el método contains() en cada clase de figura (Rectangulo, Circulo, etc.)
+            // está implementado correctamente para esa forma específica. La implementación por defecto en Figura
+            // solo verifica si el punto está cerca de puntoInicial o puntoFinal, lo cual puede no ser preciso.
             if (figura.contains(p)) {
                 return figura; // Devolver la primera figura encontrada (la superior)
             }
@@ -171,6 +189,7 @@ public class PanelDeDibujo extends JPanel {
 
     /**
      * Determina y crea un nuevo objeto Figura basado en la herramienta seleccionada actualmente.
+     * Este método SOLO debe ser llamado cuando se está en un modo de dibujo.
      * @param punto El punto de inicio para la figura.
      * @return Un nuevo objeto Figura del tipo seleccionado.
      */
@@ -185,7 +204,7 @@ public class PanelDeDibujo extends JPanel {
                 return new Rectangulo(punto);
             case "Borrador":
                 // La instancia de Borrador se crea y añade en mouseDragged para un borrado continuo
-                return new Borrador(punto);
+                return new Borrador(punto); // Aunque ya lo manejamos antes, lo mantenemos aquí por consistencia si se llama directamente.
             case "Óvalo":
                 return new Ovalo(punto);
             case "Círculo":
@@ -236,23 +255,41 @@ public class PanelDeDibujo extends JPanel {
             // Dibujar un indicador visual si la figura está seleccionada
             if (figura == figuraSeleccionada) {
                 g.setColor(Color.BLUE); // Color del indicador de selección
-                Rectangle bounds = figura.getBounds(); // Obtener los límites de la figura
-                if (bounds != null) {
-                    g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height); // Dibujar el rectángulo de selección
-                }
-            }
-        }
-
-        // TODO: Añadir lógica para dibujar un borde o indicador alrededor de figuraSeleccionada si no es null.
-        if (figuraSeleccionada != null) {
-            // Dibujar un rectángulo delimitador para la figura seleccionada si no es null
-            if (figuraSeleccionada != null) {
-                g.setColor(Color.BLUE); // Color del indicador de selección
                 Graphics2D g2d = (Graphics2D) g; // Usar Graphics2D para configuraciones avanzadas
                 g2d.setStroke(new BasicStroke(2)); // Configurar un trazo más grueso para el indicador
-                Rectangle bounds = figuraSeleccionada.getBounds(); // Obtener los límites de la figura seleccionada
+                Rectangle bounds = figura.getBounds(); // Obtener los límites de la figura
                 if (bounds != null) {
-                    g2d.drawRect(bounds.x, bounds.y, bounds.width, bounds.height); // Dibujar el rectángulo delimitador
+                    g2d.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4); // Dibujar el rectángulo de selección un poco más grande
+                } else {
+                    // Si getBounds() devuelve null (como en la implementación base de Figura y DibujoLibre),
+                    // dibujar un indicador simple basado en los puntos disponibles o un área predeterminada.
+                    // Para DibujoLibre, podrías intentar calcular el bounding box de todos los puntos.
+                    // Para otras figuras con puntoInicial y puntoFinal, podrías usar esos.
+                    // Aquí un ejemplo simple si bounds es null:
+                    Point pInicial = null;
+                    Point pFinal = null;
+                    // Intentar obtener los puntos usando reflexión si no hay getters públicos (menos ideal)
+                    try {
+                        java.lang.reflect.Field fieldInicial = Figura.class.getDeclaredField("puntoInicial");
+                        fieldInicial.setAccessible(true);
+                        pInicial = (Point) fieldInicial.get(figura);
+
+                        java.lang.reflect.Field fieldFinal = Figura.class.getDeclaredField("puntoFinal");
+                        fieldFinal.setAccessible(true);
+                        pFinal = (Point) fieldFinal.get(figura);
+                    } catch (NoSuchFieldException | IllegalAccessException ex) {
+                        // Manejar si los campos no existen o no son accesibles
+                    }
+
+                    if (pInicial != null && pFinal != null) {
+                        int x = Math.min(pInicial.x, pFinal.x);
+                        int y = Math.min(pInicial.y, pFinal.y);
+                        int width = Math.abs(pFinal.x - pInicial.x);
+                        int height = Math.abs(pFinal.y - pInicial.y);
+                        g2d.drawRect(x - 2, y - 2, width + 4, height + 4); // Dibujar un rectángulo basado en los puntos
+                    }
+                    // Nota: Para DibujoLibre/Lapiz, necesitarías acceder a la lista de puntos y calcular el bounding box.
+                    // Esto requeriría modificar la clase DibujoLibre/Lapiz o añadir un método getPoints().
                 }
             }
         }
@@ -321,8 +358,9 @@ public class PanelDeDibujo extends JPanel {
         repaint();
     }
 
-    public Figura deseleccionarFigura() {
-        return figuraSeleccionada;
-
+    // Método para deseleccionar la figura actual
+    public void deseleccionarFigura() {
+        this.figuraSeleccionada = null;
+        // No repintamos aquí, se espera que la llamada que usa este método lo haga.
     }
 }

@@ -98,11 +98,28 @@ public class Lapiz extends Figura{
     // Implementación de contains para Rectángulo (más precisa)
     @Override
     public boolean contains(Point p) {
-        int x = Math.min(puntoInicial.x, puntoFinal.x);
-        int y = Math.min(puntoInicial.y, puntoFinal.y);
-        int width = Math.abs(puntoFinal.x - puntoInicial.x);
-        int height = Math.abs(puntoFinal.y - puntoInicial.y);
-        // Crear un rectángulo Java y verificar si contiene el punto
-        return new java.awt.Rectangle(x, y, width, height).contains(p);
+        // Validación de entrada
+        if (p == null) {
+            return false;
+        }
+
+        // Validación si la figura no tiene puntos inicial o final definidos
+        if (puntoInicial == null && puntoFinal == null) {
+            return false;
+        }
+
+        // Usar una constante para la distancia umbral
+        final int DISTANCIA_UMBRAL = 5;
+
+        // Verificar si el punto está cerca de puntoInicial o puntoFinal
+        if (puntoInicial != null && puntoInicial.distance(p) <= DISTANCIA_UMBRAL) {
+            return true;
+        }
+        if (puntoFinal != null && puntoFinal.distance(p) <= DISTANCIA_UMBRAL) {
+            return true;
+        }
+
+        // De lo contrario, retornar falso (no contiene)
+        return false;
     }
 }

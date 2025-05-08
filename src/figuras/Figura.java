@@ -33,7 +33,6 @@ public abstract class Figura {
     public abstract void actualizar(Point puntoActual);
 
     // Métodos para establecer propiedades
-
     /**
      * Establece el color de primer plano (color del contorno o trazo) de la figura.
      * @param color El Color a establecer como color de primer plano.
@@ -101,8 +100,13 @@ public abstract class Figura {
      */
     public boolean contains(Point p) {
         // Implementación por defecto: verificar si el punto está cerca de algún punto de control.
-        // Las subclases deben sobrescribir esto para una detección de colisión más precisa.
-        return false; // Por defecto, ninguna figura contiene el punto a menos que se sobrescriba
+        if (puntoInicial != null && puntoInicial.distance(p) <= 5) {
+            return true;
+        }
+        if (puntoFinal != null && puntoFinal.distance(p) <= 5) {
+            return true;
+        }
+        return false;
     }
 
     public Rectangle getBounds() {

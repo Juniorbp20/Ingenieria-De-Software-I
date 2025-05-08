@@ -18,11 +18,11 @@ import javax.swing.AbstractButton;
 
 /**
  * Clase BarraDeHerramientas - Crea y gestiona la barra de herramientas con botones de figuras y acciones.
- * Ahora incluye botones para Deshacer, Rehacer, Limpiar, Corazón y Trapecio.
- * Se ha añadido funcionalidad para coordinar la selección de herramientas con PanelDeColores.
+ * Ahora incluye el botón de selección de figura.
  */
 public class BarraDeHerramientas extends JToolBar{
 
+    // JToggleButtons para las herramientas de dibujo y selección
     protected JToggleButton btnBorrador;
     protected JToggleButton btnLapiz;
     protected JToggleButton btnLinea;
@@ -31,28 +31,31 @@ public class BarraDeHerramientas extends JToolBar{
     protected JToggleButton btnCirculo;
     protected JToggleButton btnCuadrado;
     protected JToggleButton btnTriangulo;
-    protected JButton btnGuardar;
     protected JToggleButton btnPentagono;
     protected JToggleButton btnRombo;
     protected JToggleButton btnHeptagono;
     protected JToggleButton btnOctagono;
     protected JToggleButton btnEstrella;
     protected JToggleButton btnFlecha;
-    protected JToggleButton btnCorazon; // Botón para la figura Corazón
-    protected JToggleButton btnTrapecio; // Botón para la figura Trapecio
+    protected JToggleButton btnCorazon;
+    protected JToggleButton btnTrapecio;
     protected JToggleButton btnSemicirculo;
+    protected JToggleButton btnSeleccionar; // Botón para la herramienta de selección
 
-    protected JButton btnDeshacer; // Button for Undo
-    protected JButton btnRehacer; // Button for Redo
-    protected JButton btnLimpiar; // Button for Clear Canvas
+    // JButtons para acciones
+    protected JButton btnGuardar;
+    protected JButton btnDeshacer;
+    protected JButton btnRehacer;
+    protected JButton btnLimpiar;
 
-    private ButtonGroup grupoBotones; // Mantener una referencia al ButtonGroup
+    private ButtonGroup grupoBotones;
 
     private PanelDeColores panelDeColores; // Referencia a PanelDeColores
 
     public BarraDeHerramientas() {
         setOrientation(JToolBar.VERTICAL);
 
+        // Inicialización de los botones de figura (JToggleButtons)
         btnLapiz = new JToggleButton("Lapiz");
         btnLinea = new JToggleButton("Linea");
         btnRectangulo = new JToggleButton("Rectangulo");
@@ -71,22 +74,26 @@ public class BarraDeHerramientas extends JToolBar{
         btnTrapecio = new JToggleButton("Trapecio");
         btnSemicirculo = new JToggleButton("Semicirculo");
 
+        // Inicialización del botón de selección (JToggleButton)
+        btnSeleccionar = new JToggleButton("Seleccionar Figura");
 
+
+        // Inicialización de los botones de acción (JButtons)
         btnGuardar = new JButton("Guardar");
-
-        // Add Undo, Redo, and Clear buttons
         btnDeshacer = new JButton("Deshacer");
         btnRehacer = new JButton("Rehacer");
         btnLimpiar = new JButton("Limpiar");
-        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción", false); // Último parámetro: esBotónFigura?
+
+        // Formatear y agregar botones de acción primero
+        formatearYAgregar(btnDeshacer, "deshacer.png", "Deshacer última acción", false);
         formatearYAgregar(btnRehacer, "rehacer.png", "Rehacer última acción deshecha", false);
         formatearYAgregar(btnLimpiar, "limpiar.png", "Limpiar todo el lienzo", false);
-
+        formatearYAgregar(btnSeleccionar, "seleccion.png", "Seleccionar Figura", true);
 
         // Añadir un separador visual
         add(new Separator());
 
-        // Formatear y agregar botones de figuras y herramientas, indicando que son botones de figura
+        // Formatear y agregar botones de figuras y herramientas de dibujo (son herramientas)
         formatearYAgregar(btnLapiz, "lapiz.png", "Dibujo Libre", true);
         formatearYAgregar(btnLinea, "linea.png", "Línea", true);
         formatearYAgregar(btnRectangulo, "rectangulo.png", "Rectángulo", true);
@@ -103,45 +110,7 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnCorazon, "corazon.png", "Corazón", true);
         formatearYAgregar(btnTrapecio, "trapecio.png", "Trapecio", true);
         formatearYAgregar(btnBorrador, "borrador.png", "Borrador", true);
-        formatearYAgregar(btnSemicirculo, "semicirculo.png", "Circulo", true);
-
-        // Añadir ActionListeners a los botones de figura para deseleccionar el botón de selección en PanelDeColores
-        ActionListener figuraButtonListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Cuando un botón de figura es seleccionado
-                if (((JToggleButton)e.getSource()).isSelected()) {
-                    if (panelDeColores != null) {
-                        // Deseleccionar el botón de selección en PanelDeColores
-                        panelDeColores.setSeleccionarButtonState(false);
-                        // Deseleccionar la figura en el panel de dibujo al cambiar a una herramienta de dibujo
-                        if (panelDeColores.getPanelDeDibujo() != null) {
-                            panelDeColores.getPanelDeDibujo().deseleccionarFigura();
-                        }
-                    }
-                }
-                // El caso 'else' (cuando un botón de figura se deselecciona porque otro se seleccionó)
-                // no necesita hacer nada especial con el botón de selección en PanelDeColores
-            }
-        };
-
-        btnLapiz.addActionListener(figuraButtonListener);
-        btnLinea.addActionListener(figuraButtonListener);
-        btnRectangulo.addActionListener(figuraButtonListener);
-        btnOvalo.addActionListener(figuraButtonListener);
-        btnCirculo.addActionListener(figuraButtonListener);
-        btnCuadrado.addActionListener(figuraButtonListener);
-        btnTriangulo.addActionListener(figuraButtonListener);
-        btnPentagono.addActionListener(figuraButtonListener);
-        btnRombo.addActionListener(figuraButtonListener);
-        btnHeptagono.addActionListener(figuraButtonListener);
-        btnOctagono.addActionListener(figuraButtonListener);
-        btnEstrella.addActionListener(figuraButtonListener);
-        btnFlecha.addActionListener(figuraButtonListener);
-        btnCorazon.addActionListener(figuraButtonListener);
-        btnTrapecio.addActionListener(figuraButtonListener);
-        btnBorrador.addActionListener(figuraButtonListener);
-        btnSemicirculo.addActionListener(figuraButtonListener);
+        formatearYAgregar(btnSemicirculo, "semicirculo.png", "Semicirculo", true);
 
 
         // Añadir otro separador visual antes del botón Guardar
@@ -149,61 +118,95 @@ public class BarraDeHerramientas extends JToolBar{
         formatearYAgregar(btnGuardar, "guardar.png", "Guardar Imagen", false);
 
 
-        // Configurar el ButtonGroup para los JToggleButtons
+        // Configurar el ButtonGroup para los JToggleButtons (todas las herramientas)
         grupoBotones = new ButtonGroup();
-        for(Component boton : this.getComponents()) {
-            if (boton instanceof JToggleButton) {
-                grupoBotones.add((JToggleButton) boton);
-                // Añadir ActionListener a los botones de figura para deseleccionar el botón de selección en PanelDeColores
-                if (esBotonFigura((JToggleButton)boton)) { // Usar la nueva lógica para identificar botones de figura
-                    ((JToggleButton) boton).addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            if (((JToggleButton)e.getSource()).isSelected()) {
-                                // Si este botón de figura se selecciona, deseleccionar el botón de selección en PanelDeColores
-                                if (panelDeColores != null) {
-                                    panelDeColores.setSeleccionarButtonState(false);
-                                    // Opcional: Deseleccionar la figura en el panel de dibujo al cambiar a una herramienta de dibujo
-                                    if (panelDeColores.getPanelDeDibujo() != null) {
-                                        panelDeColores.getPanelDeDibujo().deseleccionarFigura();
-                                    }if (panelDeColores.getPanelDeDibujo() != null) {
-                                        panelDeColores.getPanelDeDibujo().deseleccionarFigura();
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            } else if (boton instanceof JButton && boton.equals(btnGuardar)) {
-                // El botón Guardar no necesita deseleccionar el botón de selección
-                // Su ActionListener se maneja en VentanaPrincipal
-            } else if (boton instanceof JButton) {
-                // Para los botones de acción (Deshacer, Rehacer, Limpiar), deseleccionar el botón de selección en PanelDeColores
-                ((JButton) boton).addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        if (panelDeColores != null) {
-                            panelDeColores.setSeleccionarButtonState(false);
-                            // Deseleccionar la figura en el panel de dibujo al usar una herramienta de acción
-                            if (panelDeColores.getPanelDeDibujo() != null) {
-                                panelDeColores.getPanelDeDibujo().deseleccionarFigura();
-                            }
-                        }
-                        // También deseleccionar cualquier botón de figura en la BarraDeHerramientas
-                        deseleccionarBotonesFiguras();
+        grupoBotones.add(btnSeleccionar); // Añadir el botón de selección al grupo
+        grupoBotones.add(btnLapiz);
+        grupoBotones.add(btnLinea);
+        grupoBotones.add(btnRectangulo);
+        grupoBotones.add(btnCuadrado);
+        grupoBotones.add(btnOvalo);
+        grupoBotones.add(btnCirculo);
+        grupoBotones.add(btnTriangulo);
+        grupoBotones.add(btnPentagono);
+        grupoBotones.add(btnRombo);
+        grupoBotones.add(btnHeptagono);
+        grupoBotones.add(btnOctagono);
+        grupoBotones.add(btnEstrella);
+        grupoBotones.add(btnFlecha);
+        grupoBotones.add(btnCorazon);
+        grupoBotones.add(btnTrapecio);
+        grupoBotones.add(btnSemicirculo);
+        grupoBotones.add(btnBorrador);
+
+
+        // --- Listeners para los botones de herramienta (JToggleButtons) ---
+        ActionListener herramientaButtonListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cuando un botón de herramienta (incluido selección) es seleccionado
+                JToggleButton sourceButton = (JToggleButton) e.getSource();
+                if (sourceButton.isSelected()) {
+                    // Deseleccionar la figura en el panel de dibujo al cambiar a cualquier herramienta
+                    if (panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
+                        panelDeColores.getPanelDeDibujo().deseleccionarFigura();
+                        panelDeColores.getPanelDeDibujo().repaint(); // Repintar para ocultar el borde de selección
                     }
-                });
+                    // La coordinación con PanelDeColores (deseleccionar su botón de selección si existiera)
+                    // ya no es necesaria porque el botón de selección está aquí.
+                }
             }
-        }
+        };
+
+        // Añadir el mismo listener a todos los JToggleButtons
+        btnSeleccionar.addActionListener(herramientaButtonListener);
+        btnLapiz.addActionListener(herramientaButtonListener);
+        btnLinea.addActionListener(herramientaButtonListener);
+        btnRectangulo.addActionListener(herramientaButtonListener);
+        btnOvalo.addActionListener(herramientaButtonListener);
+        btnCirculo.addActionListener(herramientaButtonListener);
+        btnCuadrado.addActionListener(herramientaButtonListener);
+        btnTriangulo.addActionListener(herramientaButtonListener);
+        btnPentagono.addActionListener(herramientaButtonListener);
+        btnRombo.addActionListener(herramientaButtonListener);
+        btnHeptagono.addActionListener(herramientaButtonListener);
+        btnOctagono.addActionListener(herramientaButtonListener);
+        btnEstrella.addActionListener(herramientaButtonListener);
+        btnFlecha.addActionListener(herramientaButtonListener);
+        btnCorazon.addActionListener(herramientaButtonListener);
+        btnTrapecio.addActionListener(herramientaButtonListener);
+        btnSemicirculo.addActionListener(herramientaButtonListener);
+        btnBorrador.addActionListener(herramientaButtonListener);
+
+
+        // --- Listeners para los botones de acción (JButtons) ---
+        // Al usar un botón de acción, deseleccionar cualquier herramienta seleccionada
+        ActionListener accionButtonListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deseleccionarBotonesHerramienta(); // Deseleccionar cualquier botón de herramienta
+                // Deseleccionar la figura en el panel de dibujo al usar una herramienta de acción
+                if (panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
+                    panelDeColores.getPanelDeDibujo().deseleccionarFigura();
+                    panelDeColores.getPanelDeDibujo().repaint(); // Repintar para ocultar el borde de selección
+                }
+            }
+        };
+
+        btnDeshacer.addActionListener(accionButtonListener);
+        btnRehacer.addActionListener(accionButtonListener);
+        btnLimpiar.addActionListener(accionButtonListener);
+
+
     }
 
-    // Método formatearYAgregar modificado para incluir si es un botón de figura
-    private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esBotonFigura) {
+    // Método formatearYAgregar actualizado
+    private void formatearYAgregar(AbstractButton boton, String nombreIcono, String tooltip, boolean esHerramienta) {
         boton.setFocusable(false);
-        boton.setToolTipText("Seleccione: " + tooltip);
+        boton.setToolTipText("Seleccione: " + tooltip); // Mantener "Seleccione: " para getHerramientaSeleccionada()
 
-        // Usar un ClientProperty para marcar si es un botón de figura
-        boton.putClientProperty("esBotonFigura", esBotonFigura);
+        // Usar un ClientProperty para marcar si es un botón de herramienta (JToggleButton)
+        boton.putClientProperty("esHerramienta", esHerramienta);
 
 
         java.net.URL ruta = getClass().getResource("/iconos/" + nombreIcono);
@@ -225,25 +228,28 @@ public class BarraDeHerramientas extends JToolBar{
         add(boton);
     }
 
-    // Método de ayuda para verificar si un botón es un botón de figura/herramienta de dibujo
-    private boolean esBotonFigura(AbstractButton boton) {
-        Object prop = boton.getClientProperty("esBotonFigura");
+    // Método de ayuda para verificar si un botón es una herramienta (JToggleButton en el ButtonGroup)
+    private boolean esHerramienta(AbstractButton boton) {
+        Object prop = boton.getClientProperty("esHerramienta");
         return prop != null && (boolean) prop;
     }
 
 
     public String getHerramientaSeleccionada() {
-        // Recorrer los botones para encontrar cuál está seleccionado en el ButtonGroup
+        // Recorrer los botones para encontrar cuál JToggleButton está seleccionado
         for (Component boton : this.getComponents()) {
             if (boton instanceof JToggleButton) {
                 JToggleButton toggleButton = (JToggleButton) boton;
-                if (toggleButton.isSelected() && esBotonFigura(toggleButton)) { // Solo considerar botones de figura
-                    return toggleButton.getToolTipText().replace("Seleccione: ", ""); // Obtener el nombre de la herramienta del tooltip
+                if (toggleButton.isSelected()) {
+                    // Devolver el nombre de la herramienta (obtenido del tooltip sin el prefijo)
+                    return toggleButton.getToolTipText().replace("Seleccione: ", "");
                 }
             }
         }
-        // Si ningún botón de figura está seleccionado, devolver un valor por defecto o indicar "Ninguna"
-        return "Ninguna"; // O podrías devolver "Dibujo Libre" como antes si quieres un comportamiento por defecto
+        // Si ningún JToggleButton está seleccionado, devolver un valor por defecto o indicar "Ninguna"
+        // Podrías considerar que el Lápiz es la herramienta por defecto si no hay ninguna seleccionada.
+        // Aquí devolvemos "Ninguna" para claridad.
+        return "Ninguna";
     }
 
 
@@ -276,14 +282,12 @@ public class BarraDeHerramientas extends JToolBar{
     }
 
     /**
-     * Deselecciona todos los JToggleButtons que son botones de figura en esta barra de herramientas.
+     * Deselecciona todos los JToggleButtons (herramientas) en esta barra de herramientas.
      */
-    public void deseleccionarBotonesFiguras() {
+    public void deseleccionarBotonesHerramienta() {
         if (grupoBotones != null) {
             grupoBotones.clearSelection(); // Esto deselecciona todos los botones en el grupo
         }
-        // Si tienes botones de figura que no están en el ButtonGroup (no es el caso actual pero por si acaso),
-        // necesitarías deseleccionarlos individualmente.
     }
 
     /**
@@ -294,4 +298,36 @@ public class BarraDeHerramientas extends JToolBar{
         this.panelDeColores = panelDeColores;
     }
 
+    // Este método ahora está en BarraDeHerramientas
+    /**
+     * Establece el estado seleccionado del botón de selección de figura.
+     * @param selected El estado a establecer (true para seleccionado, false para deseleccionado).
+     */
+    public void setSeleccionarButtonState(boolean selected) {
+        btnSeleccionar.setSelected(selected);
+        // Deseleccionar la figura en el panel de dibujo si se desactiva la selección
+        if (!selected && panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
+            panelDeColores.getPanelDeDibujo().deseleccionarFigura();
+            panelDeColores.getPanelDeDibujo().repaint(); // Repintar para actualizar visualmente
+        } else if (selected && panelDeColores != null && panelDeColores.getPanelDeDibujo() != null) {
+            // Si se selecciona el botón de selección, deseleccionar cualquier figura actual antes de seleccionar una nueva
+            panelDeColores.getPanelDeDibujo().deseleccionarFigura();
+            panelDeColores.getPanelDeDibujo().repaint(); // Repintar para actualizar visualmente
+        }
+
+        // Cuando el botón de selección se activa desde PanelDeColores,
+        // deseleccionar otros botones en esta barra de herramientas.
+        if (selected) {
+            deseleccionarOtrosBotonesHerramienta(btnSeleccionar);
+        }
+    }
+
+    // Método auxiliar para deseleccionar todos los botones de herramienta excepto uno específico
+    private void deseleccionarOtrosBotonesHerramienta(JToggleButton botonExcluido) {
+        for (Component boton : this.getComponents()) {
+            if (boton instanceof JToggleButton && boton != botonExcluido) {
+                ((JToggleButton) boton).setSelected(false);
+            }
+        }
+    }
 }
