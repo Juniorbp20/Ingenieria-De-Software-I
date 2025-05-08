@@ -140,7 +140,7 @@ public class Corazon extends Figura { // Extender de Figurapublic class Corazon 
 
     @Override
     public FiguraData getFiguraData() {
-        FiguraData data = new FiguraData("Rectangulo");
+        FiguraData data = new FiguraData("Corazon");
         data.setPuntoInicial(this.puntoInicial);
         data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
         data.setColorDePrimerPlano(this.colorDePrimerPlano);

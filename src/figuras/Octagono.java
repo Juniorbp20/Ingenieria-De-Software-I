@@ -76,7 +76,7 @@ public class Octagono extends Figura {
 
     @Override
     public FiguraData getFiguraData() {
-        FiguraData data = new FiguraData("Rectangulo");
+        FiguraData data = new FiguraData("Octagono");
         data.setPuntoInicial(this.puntoInicial);
         data.setPuntoFinal(this.puntoFinal); // Para rectángulos, puntoInicial y puntoFinal definen el tamaño/posición
         data.setColorDePrimerPlano(this.colorDePrimerPlano);
